@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/imdb_nav">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imdb_nav"
+    app:startDestination="@id/movieList">
 
+    <fragment
+        android:id="@+id/movieList"
+        android:name="com.ifarm.porosh.myimdb.ui.MovieList"
+        android:label="fragment_movie_list"
+        tools:layout="@layout/fragment_movie_list" />
+    <fragment
+        android:id="@+id/movieDetails"
+        android:name="com.ifarm.porosh.myimdb.ui.MovieDetails"
+        android:label="fragment_movie_details"
+        tools:layout="@layout/fragment_movie_details" />
+    <fragment
+        android:id="@+id/wishList"
+        android:name="com.ifarm.porosh.myimdb.ui.WishList"
+        android:label="fragment_wish_list"
+        tools:layout="@layout/fragment_wish_list" />
 </navigation>
