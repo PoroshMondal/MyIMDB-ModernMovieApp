@@ -4,7 +4,5 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlinKapt) apply false
     alias(libs.plugins.daggerHilt) apply false
-    //alias(libs.plugins.gooleServicesPlugin) apply false
-    //alias(libs.plugins.mapsPlatformPlugin) apply false
     alias(libs.plugins.safeArgsPlugin) apply false
 }

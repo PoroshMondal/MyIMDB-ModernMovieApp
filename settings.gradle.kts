@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyIMDB"
 include(":app")
- 
+include(":data")
