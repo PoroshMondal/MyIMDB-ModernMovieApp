@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "MyIMDB"
 include(":app")
 include(":data")
+include(":domain")
