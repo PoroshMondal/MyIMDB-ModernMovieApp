@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ifarm.porosh.myimdb.databinding.FragmentWishListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WishList : Fragment() {
 
     private lateinit var binding: FragmentWishListBinding

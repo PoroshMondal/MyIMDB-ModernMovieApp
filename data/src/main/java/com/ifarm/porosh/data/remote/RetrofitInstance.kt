@@ -7,12 +7,10 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-const val weather_api_key = "e9260defcaa80ebeb476f4b91d6233d1"
-//const val base_url = "https://api.openweathermap.org/data/2.5/"
 const val base_url = "https://raw.githubusercontent.com/"
 const val endUrl = "erik-sytnyk/movies-list/master/db.json"
 
-private val moshi = Moshi
+val moshi = Moshi
     .Builder()
     .add(KotlinJsonAdapterFactory())
     .build()

@@ -49,7 +49,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain",":data"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -74,6 +75,10 @@ dependencies {
 
     // loader
     implementation(libs.progress.dialog)
+
+    // Retrofit2
+    implementation(libs.squareup.retrofit)
+    implementation(libs.retrofit2.converter.moshi)
 
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.splash.screen)

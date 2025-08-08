@@ -5,15 +5,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModel
+import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
+import com.ifarm.porosh.myimdb.viewModels.NetworkViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
+    private val viewModel: NetworkViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +31,7 @@ class SplashScreen : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        waitSplash(true)
+        fetchMovieData()
 
         /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -48,6 +55,40 @@ class SplashScreen : AppCompatActivity() {
             }
         }
         splashThread.start()
+    }
+
+    private fun fetchMovieData(){
+        viewModel.fetchMovieList().observe(this) { response ->
+            when(response) {
+                is ApiResponse.Loading -> {
+                    Log.i("network_module","Loading.....")
+                    //progressDialog.show()
+                }
+
+                is ApiResponse.Success -> {
+                    //progressDialog.dismiss()
+                    val movieData = response.data
+                    val movieGenres = movieData.genres
+                    val movieList = movieData.movies
+                    if (movieData !=null){
+                        Log.i("network_module","Movie List - response: ${movieList[0].title}")
+                    }else{
+                        Log.i("network_module","Movie List - response: Unsuccessful")
+                    }
+                }
+
+                is ApiResponse.Error -> {
+                    //progressDialog.dismiss()
+                    //DialogUtil(mActivity).showNotifyDialog(response.message)
+                    Log.i("network_module","Movie List - response: Unsuccessful ${response.message}")
+                }
+
+            }
+
+            waitSplash(true)
+
+        }
+
     }
 
 }

@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ifarm.porosh.myimdb.databinding.FragmentMovieDetailsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieDetails : Fragment() {
 
     private lateinit var binding: FragmentMovieDetailsBinding

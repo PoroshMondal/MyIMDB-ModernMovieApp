@@ -5,14 +5,20 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import com.ifarm.porosh.myimdb.databinding.ActivityMainBinding
+import com.ifarm.porosh.myimdb.viewModels.NetworkViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: NetworkViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
