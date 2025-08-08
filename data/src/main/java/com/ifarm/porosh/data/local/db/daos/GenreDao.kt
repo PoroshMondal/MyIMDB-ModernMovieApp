@@ -1,0 +1,26 @@
+package com.ifarm.porosh.data.local.db.daos
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import com.ifarm.porosh.data.local.db.entities.Genre
+import com.ifarm.porosh.data.local.db.relations.GenreWithMovies
+
+@Dao
+interface GenreDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGenre(genre: Genre): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGenres(genres: List<Genre>): List<Long>
+
+    @Transaction
+    @Query("SELECT * FROM genres")
+    suspend fun getAllGenres(): List<Genre>
+
+    @Transaction
+    @Query("SELECT * FROM genres WHERE genreId = :id")
+    suspend fun getGenreWithMovies(id: Long): GenreWithMovies
+}
