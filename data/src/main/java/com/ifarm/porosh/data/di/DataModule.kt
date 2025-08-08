@@ -48,10 +48,13 @@ object DataModule {
         return IMDBDatabase.getDbInstance(context).wishListDao()
     }
 
-   /* @Provides
-    fun provideDBRepository(@ApplicationContext context: Context): MovieRepository {
-        return MovieRepositoryImpl()
-    }*/
+    @Provides
+    fun provideDBRepository(movieDao: MoviesDao,
+                            genreDao: GenreDao,
+                            wishListDao: WishListDao,
+                            movieGenreRefDao: MovieGenreRefDao): MovieRepository {
+        return MovieRepositoryImpl(movieDao,genreDao,wishListDao,movieGenreRefDao)
+    }
 
     @Provides
     fun provideDataStoreRepository(@ApplicationContext context: Context): DataStoreRepository {

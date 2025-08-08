@@ -19,9 +19,9 @@ interface GenreDao {
 
     @Transaction
     @Query("SELECT * FROM genres")
-    suspend fun getAllGenres(): LiveData<List<Genre>>
+    fun getAllGenres(): LiveData<List<Genre>>
 
     @Transaction
     @Query("SELECT * FROM genres WHERE genreId = :id")
-    suspend fun getGenreWithMovies(id: Long): LiveData<GenreWithMovies>
+    fun getGenreWithMovies(id: Long): LiveData<GenreWithMovies>
 }

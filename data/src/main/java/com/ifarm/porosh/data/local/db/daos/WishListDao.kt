@@ -22,14 +22,14 @@ interface WishListDao {
     suspend fun removeByMovieId(movieId: Int)
 
     @Query("SELECT * FROM wishlist")
-    suspend fun getAllWishlistItems(): LiveData<List<WishList>>
+    fun getAllWishlistItems(): LiveData<List<WishList>>
 
     @Transaction
     @Query("""
         SELECT * FROM movies
-        INNER JOIN wishlist ON movies.id = wishlist.movieId
+        INNER JOIN wishlist ON movies.movieId = wishlist.movieId
     """)
-    suspend fun getWishlistMovies(): LiveData<List<Movies>>
+    fun getWishlistMovies(): LiveData<List<Movies>>
 
     @Query("SELECT COUNT(*) FROM wishlist")
     suspend fun getWishlistCount(): Int

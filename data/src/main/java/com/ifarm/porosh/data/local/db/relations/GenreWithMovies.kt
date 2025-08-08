@@ -14,7 +14,7 @@ data class GenreWithMovies(
     @Embedded val genre: Genre,
     @Relation(
         parentColumn = "genreId",
-        entityColumn = "id",
+        entityColumn = "movieId",
         associateBy = Junction(
             value = MovieGenreRef::class,
             parentColumn = "genreId",

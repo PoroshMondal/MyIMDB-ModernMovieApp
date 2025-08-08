@@ -19,11 +19,11 @@ interface MoviesDao {
 
     @Transaction
     @Query("SELECT * FROM movies ORDER BY year DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMoviesPaginated(limit: Int, offset: Int): LiveData<List<Movies>>
+    fun getMoviesPaginated(limit: Int, offset: Int): LiveData<List<Movies>>
 
     @Transaction
-    @Query("SELECT * FROM movies WHERE id = :movieId")
-    suspend fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres>
+    @Query("SELECT * FROM movies WHERE movieId = :movieId")
+    fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres>
 
     @Query("DELETE FROM movies")
     suspend fun clearMovies()

@@ -51,7 +51,7 @@ class MovieRepositoryImpl @Inject constructor(
     * Genre methods
     * */
     override suspend fun insertGenre(genre: Genre): Long {
-        TODO("Not yet implemented")
+        return genreDao.insertGenre(genre)
     }
 
     override suspend fun insertGenres(genres: List<Genre>): List<Long> {

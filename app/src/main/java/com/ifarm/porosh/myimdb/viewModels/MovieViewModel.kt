@@ -1,6 +1,7 @@
 package com.ifarm.porosh.myimdb.viewModels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ifarm.porosh.data.local.db.entities.Genre
@@ -44,8 +45,13 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
     /*
     * Genre methods
     * */
-    fun insertGenre(genre: Genre): Long {
-        TODO("Not yet implemented")
+    fun insertGenre(genre: Genre): LiveData<Long> {
+        val result = MutableLiveData<Long>()
+        viewModelScope.launch {
+            val id = movieRepository.insertGenre(genre)
+            result.postValue(id)
+        }
+        return result
     }
 
     fun insertGenres(genres: List<Genre>): List<Long> {

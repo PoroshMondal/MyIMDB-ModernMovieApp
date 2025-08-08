@@ -10,7 +10,7 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 data class MovieWithGenres(
     @Embedded val movie: Movies,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "movieId",
         entityColumn = "genreId",
         associateBy = Junction(MovieGenreRef::class)
     )

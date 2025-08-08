@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
+import com.ifarm.porosh.data.local.db.entities.Genre
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
+import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
+import com.ifarm.porosh.myimdb.viewModels.MovieViewModel
 import com.ifarm.porosh.myimdb.viewModels.NetworkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +23,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
-    private val viewModel: NetworkViewModel by viewModels()
+    private val networkViewModel: NetworkViewModel by viewModels()
+    private val movieViewModel: MovieViewModel by viewModels()
+    private val dataStoreViewModel: DataStoreViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +50,7 @@ class SplashScreen : AppCompatActivity() {
         val splashThread = object : Thread() {
             override fun run() {
                 try {
-                    sleep(1000) // 3 seconds delay
+                    sleep(8000) // 3 seconds delay
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 } finally {
@@ -58,7 +63,7 @@ class SplashScreen : AppCompatActivity() {
     }
 
     private fun fetchMovieData(){
-        viewModel.fetchMovieList().observe(this) { response ->
+        networkViewModel.fetchMovieList().observe(this) { response ->
             when(response) {
                 is ApiResponse.Loading -> {
                     Log.i("network_module","Loading.....")
@@ -71,6 +76,34 @@ class SplashScreen : AppCompatActivity() {
                     val movieGenres = movieData.genres
                     val movieList = movieData.movies
                     if (movieData !=null){
+                        /////
+
+                        // 1. Insert genres and keep a map of name -> id
+
+                        val genresMap = mutableMapOf<String, Long>()
+                        movieList.flatMap { it.genres }.distinct().forEach { genreName ->
+                             movieViewModel.insertGenre(Genre(name = genreName)).observe(this){ id ->
+                                 genresMap[genreName] = id
+                                 Log.i("data_module","Genre List - response: $id")
+                             }
+                        }
+                        Log.i("data_module","Genre map - response: ${genresMap.forEach { data ->
+                            data 
+                        }}")
+
+                        /*// 2. Insert movies
+                        movieDao.insertMovies(movies.map { it.toEntity() })
+
+                        // 3. Insert cross refs
+                        movies.forEach { movie ->
+                            val movieId = movie.id
+                            val crossRefs = movie.genres.map { genreName ->
+                                MovieGenreCrossRef(movieId, genresMap[genreName]!!)
+                            }
+                            crossRefDao.insertCrossRefs(crossRefs)
+                        }*/
+
+                        /////
                         Log.i("network_module","Movie List - response: ${movieList[0].title}")
                     }else{
                         Log.i("network_module","Movie List - response: Unsuccessful")
