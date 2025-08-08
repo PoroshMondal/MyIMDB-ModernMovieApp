@@ -4,9 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.ifarm.porosh.data.remote.RetrofitInstance
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
-import com.ifarm.porosh.data.remote.endUrl
 import com.ifarm.porosh.data.repository.NetworkRepository
 import com.ifarm.porosh.domain.models.MovieListModel
 import com.ifarm.porosh.myimdb.utilities.IMDBConstants

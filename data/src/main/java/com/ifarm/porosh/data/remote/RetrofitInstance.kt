@@ -15,7 +15,7 @@ val moshi = Moshi
     .add(KotlinJsonAdapterFactory())
     .build()
 
-object RetrofitInstance {
+/*object RetrofitInstance {
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor { getTokenFromPreferences() })
         .build()
@@ -35,4 +35,4 @@ object RetrofitInstance {
         return "xyz123"  // Fetch from Secure Storage
     }
 
-}
+}*/
