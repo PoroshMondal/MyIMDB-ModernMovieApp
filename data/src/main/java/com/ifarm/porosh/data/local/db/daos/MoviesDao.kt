@@ -1,5 +1,6 @@
 package com.ifarm.porosh.data.local.db.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -9,7 +10,7 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.local.db.relations.MovieWithGenres
 
 @Dao
-interface MovieDao {
+interface MoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: Movies)
 
@@ -18,11 +19,11 @@ interface MovieDao {
 
     @Transaction
     @Query("SELECT * FROM movies ORDER BY year DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMoviesPaginated(limit: Int, offset: Int): List<Movies>
+    suspend fun getMoviesPaginated(limit: Int, offset: Int): LiveData<List<Movies>>
 
     @Transaction
     @Query("SELECT * FROM movies WHERE id = :movieId")
-    suspend fun getMovieWithGenres(movieId: Int): MovieWithGenres
+    suspend fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres>
 
     @Query("DELETE FROM movies")
     suspend fun clearMovies()

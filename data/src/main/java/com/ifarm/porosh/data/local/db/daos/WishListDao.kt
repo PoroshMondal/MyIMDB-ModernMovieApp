@@ -1,5 +1,6 @@
 package com.ifarm.porosh.data.local.db.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -21,14 +22,14 @@ interface WishListDao {
     suspend fun removeByMovieId(movieId: Int)
 
     @Query("SELECT * FROM wishlist")
-    suspend fun getAllWishlistItems(): List<WishList>
+    suspend fun getAllWishlistItems(): LiveData<List<WishList>>
 
     @Transaction
     @Query("""
         SELECT * FROM movies
         INNER JOIN wishlist ON movies.id = wishlist.movieId
     """)
-    suspend fun getWishlistMovies(): List<Movies>
+    suspend fun getWishlistMovies(): LiveData<List<Movies>>
 
     @Query("SELECT COUNT(*) FROM wishlist")
     suspend fun getWishlistCount(): Int
