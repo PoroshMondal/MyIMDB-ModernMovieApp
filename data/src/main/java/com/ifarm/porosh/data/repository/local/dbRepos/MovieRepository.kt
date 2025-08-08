@@ -1,11 +1,7 @@
-package com.ifarm.porosh.data.repository.local
+package com.ifarm.porosh.data.repository.local.dbRepos
 
 import androidx.lifecycle.LiveData
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.ifarm.porosh.data.local.db.entities.Genre
 import com.ifarm.porosh.data.local.db.entities.MovieGenreRef
 import com.ifarm.porosh.data.local.db.entities.Movies

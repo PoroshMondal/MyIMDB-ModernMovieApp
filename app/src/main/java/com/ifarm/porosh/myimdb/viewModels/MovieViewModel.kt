@@ -1,7 +1,6 @@
 package com.ifarm.porosh.myimdb.viewModels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ifarm.porosh.data.local.db.entities.Genre
@@ -10,7 +9,7 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.local.db.entities.WishList
 import com.ifarm.porosh.data.local.db.relations.GenreWithMovies
 import com.ifarm.porosh.data.local.db.relations.MovieWithGenres
-import com.ifarm.porosh.data.repository.local.MovieRepository
+import com.ifarm.porosh.data.repository.local.dbRepos.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

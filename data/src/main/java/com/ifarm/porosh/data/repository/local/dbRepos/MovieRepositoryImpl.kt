@@ -1,4 +1,4 @@
-package com.ifarm.porosh.data.repository.local
+package com.ifarm.porosh.data.repository.local.dbRepos
 
 import androidx.lifecycle.LiveData
 import com.ifarm.porosh.data.local.db.daos.GenreDao

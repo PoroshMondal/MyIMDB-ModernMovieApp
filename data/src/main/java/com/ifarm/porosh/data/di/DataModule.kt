@@ -1,12 +1,15 @@
 package com.ifarm.porosh.data.di
 
 import android.content.Context
-import androidx.room.Room
 import com.ifarm.porosh.data.local.IMDBDatabase
 import com.ifarm.porosh.data.local.db.daos.GenreDao
 import com.ifarm.porosh.data.local.db.daos.MovieGenreRefDao
 import com.ifarm.porosh.data.local.db.daos.MoviesDao
 import com.ifarm.porosh.data.local.db.daos.WishListDao
+import com.ifarm.porosh.data.repository.local.dataStorePref.DataStoreRepository
+import com.ifarm.porosh.data.repository.local.dataStorePref.DataStoreRepositoryImpl
+import com.ifarm.porosh.data.repository.local.dbRepos.MovieRepository
+import com.ifarm.porosh.data.repository.local.dbRepos.MovieRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +18,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DBModule {
+object DataModule {
 
     /*@Provides
     fun provideDatabase(@ApplicationContext context: Context): IMDBDatabase {
@@ -45,9 +48,14 @@ object DBModule {
         return IMDBDatabase.getDbInstance(context).wishListDao()
     }
 
-    /*@Provides
+   /* @Provides
+    fun provideDBRepository(@ApplicationContext context: Context): MovieRepository {
+        return MovieRepositoryImpl()
+    }*/
+
+    @Provides
     fun provideDataStoreRepository(@ApplicationContext context: Context): DataStoreRepository {
         return DataStoreRepositoryImpl(context)
-    }*/
+    }
 
 }
