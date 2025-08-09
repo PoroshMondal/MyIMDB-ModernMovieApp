@@ -82,7 +82,7 @@ The app follows **MVVM / Clean Architecture** principles:
 
 If you don’t want to build from source, you can directly install the APK:
 
-1. Download the latest APK from the [Here](https://drive.google.com/file/d/1WsvmWdB-hANOPnXnkFEK6UPZlCoHVQoP/view) section. *(Replace `#` with your release link)*
+1. Download the latest APK from the [Here](https://drive.google.com/file/d/1WsvmWdB-hANOPnXnkFEK6UPZlCoHVQoP/view) section.
 2. Transfer the APK to your Android device.
 3. Enable **Install from Unknown Sources** in your device settings.
 4. Open the APK file and follow the installation prompts.
