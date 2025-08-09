@@ -31,10 +31,13 @@ class MoviesAdapter (private val callBack: (Movies, Int) -> Unit): ListAdapter<M
         private val binding: SingleRowMoviesBinding,
         private val callback: (movieModel: Movies, Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root){
-        fun bind(data: Movies, position: Int){
-            binding.movies = data
+        fun bind(movieItem: Movies, position: Int){
+            binding.movies = movieItem
+            binding.layoutSingleMovieItem.setOnClickListener {
+                callback(movieItem,position)
+            }
 
-            Log.i("movies_rv","RV - update movie ID: ${data.movieId}")
+            Log.i("movies_rv","RV - update movie ID: ${movieItem.movieId}")
 
             /*binding.layoutSingleRowItem.setOnClickListener {
                 LogUtil.Log.debugVisit("RV - update adapter position check: $adapterPosition pos: $position")

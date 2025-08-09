@@ -9,9 +9,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.ifarm.porosh.myimdb.databinding.ActivityMainBinding
 import com.ifarm.porosh.myimdb.viewModels.NetworkViewModel
+import com.ifarm.porosh.myimdb.viewModels.OperationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: NetworkViewModel by viewModels()
+    val operationsViewModel: OperationsViewModel by viewModels()
 
     var navHostFragment: NavHostFragment? = null
     private var navController: NavController? = null
@@ -95,6 +98,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun clearBackStack(): NavOptions {
+        return NavOptions.Builder()
+            .setPopUpTo(R.id.imdb_nav, true)
+            .build()
     }
 
 }

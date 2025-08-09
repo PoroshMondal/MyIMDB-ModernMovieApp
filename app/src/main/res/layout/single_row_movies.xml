@@ -17,6 +17,7 @@
         app:cardUseCompatPadding="true">
 
         <LinearLayout
+            android:id="@+id/layout_single_movie_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">

@@ -2,23 +2,23 @@ package com.ifarm.porosh.myimdb.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ifarm.porosh.data.local.db.entities.Movies
-import com.ifarm.porosh.domain.models.Movie
-import com.ifarm.porosh.myimdb.adapters.EndlessScrollListener
+import com.ifarm.porosh.myimdb.MainActivity
+import com.ifarm.porosh.myimdb.R
 import com.ifarm.porosh.myimdb.adapters.MoviesAdapter
 import com.ifarm.porosh.myimdb.databinding.FragmentMovieListBinding
 import com.ifarm.porosh.myimdb.viewModels.MovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.getValue
 
 @AndroidEntryPoint
 class MovieList : Fragment() {
@@ -26,9 +26,12 @@ class MovieList : Fragment() {
     private lateinit var binding: FragmentMovieListBinding
     private val movieViewModel: MovieViewModel by viewModels()
     private lateinit var adapter: MoviesAdapter
+    private lateinit var mActivity: MainActivity
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mActivity = activity as MainActivity
     }
 
     override fun onCreateView(
@@ -41,13 +44,13 @@ class MovieList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = NavHostFragment.findNavController(this)
 
         adapter = MoviesAdapter(::callBack)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvMovies.layoutManager = layoutManager
         binding.rvMovies.adapter = adapter
 
-        // First load
         movieViewModel.loadNextPage()
 
         movieViewModel.movies.observe(viewLifecycleOwner){ movies ->
@@ -63,24 +66,19 @@ class MovieList : Fragment() {
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val totalItems = layoutManager.itemCount
 
-                if (lastVisibleItem >= totalItems - 2) { // Load when near end
+                if (lastVisibleItem >= totalItems - 2) {
                     movieViewModel.loadNextPage()
                 }
 
             }
         })
 
-        /*binding.rvMovies.addOnScrollListener(object : EndlessScrollListener(layoutManager) {
-            override fun onLoadMore(page: Int) {
-                loadMoreData(page)
-            }
-
-        })*/
-
     }
 
     private fun callBack(movie: Movies, position: Int){
+        mActivity.operationsViewModel.setMoviesData(movie)
         Toast.makeText(requireContext(),"Movie: ${movie.title} postiion: $position", Toast.LENGTH_SHORT).show()
+        navController.navigate(R.id.movieDetails, null, mActivity.clearBackStack())
     }
 
 }
