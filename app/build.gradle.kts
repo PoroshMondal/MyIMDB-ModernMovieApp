@@ -49,7 +49,8 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":domain"))
+    implementation(project(":data"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -68,13 +69,6 @@ dependencies {
 
     kapt (libs.hilt.compiler)
 
-    // Retrofit2
-    implementation(libs.squareup.retrofit)
-    implementation(libs.retrofit2.converter.moshi)
-
-    // Moshi
-    implementation(libs.squareup.moshi.kotlin)
-
     // Glide
     implementation(libs.glide)
     annotationProcessor (libs.glide.compiler)
@@ -82,16 +76,9 @@ dependencies {
     // loader
     implementation(libs.progress.dialog)
 
-    // Room db
-    implementation(libs.androidx.room.runtime)
-    implementation (libs.androidx.work.rxjava2)
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.androidx.room.compiler)
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation(libs.androidx.room.ktx)
-
-    // DataStore
-    implementation(libs.androidx.datastore)
+    // Retrofit2
+    implementation(libs.squareup.retrofit)
+    implementation(libs.retrofit2.converter.moshi)
 
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.splash.screen)

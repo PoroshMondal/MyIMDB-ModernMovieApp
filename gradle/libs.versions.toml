@@ -1,5 +1,6 @@
 [versions]
 agp = "8.12.0"
+library = "8.12.0"
 kotlin = "2.2.0"
 kotlinKapt = "2.2.0"
 coreKtx = "1.16.0"
@@ -21,6 +22,7 @@ glideVersion = "4.16.0"
 retrofitVersion = "3.0.0"
 converterMoshiVersion = "3.0.0"
 moshiVersion = "1.15.2"
+moshicodegenVersion = "1.15.0"
 roomRuntime = "2.7.2"
 roomKtx = "2.7.2"
 workRxjava2 = "2.10.3"
@@ -52,6 +54,7 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
 retrofit2-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "converterMoshiVersion" }
 squareup-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiVersion" }
+squareup-moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshicodegenVersion" }
 
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 androidx-room-compiler = { group = "androidx.room", name="room-compiler", version.ref = "roomRuntime" }
@@ -66,6 +69,7 @@ progress-dialog = {group = "com.github.techinessoverloaded", name = "progress-di
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "library" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinKapt = {id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinKapt"}
 daggerHilt = {id = "com.google.dagger.hilt.android", version.ref = "daggerHiltAndroid"}

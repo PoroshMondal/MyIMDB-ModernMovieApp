@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_color_day_night">#ffffff</color>
+    <color name="rv_back_color">#000000</color>
+    <color name="color_background">#FAFAFA</color>
+</resources>
