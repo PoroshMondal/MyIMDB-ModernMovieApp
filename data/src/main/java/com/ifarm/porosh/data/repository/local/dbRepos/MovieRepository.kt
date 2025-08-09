@@ -17,7 +17,7 @@ interface MovieRepository {
     * */
     suspend fun insertMovies(movies: List<Movies>)
 
-    fun getMoviesPaginated(limit: Int, offset: Int): LiveData<List<Movies>>
+    suspend fun getMoviesPaginated(limit: Int, offset: Int): List<Movies>
 
     fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres>
 

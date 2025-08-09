@@ -32,11 +32,11 @@ class MovieRepositoryImpl @Inject constructor(
         movieDao.insertMovies(movies)
     }
 
-    override fun getMoviesPaginated(
+    override suspend fun getMoviesPaginated(
         limit: Int,
         offset: Int
-    ): LiveData<List<Movies>> {
-        TODO("Not yet implemented")
+    ): List<Movies> {
+        return movieDao.getMoviesPaginated(limit,offset)
     }
 
     override fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres> {

@@ -15,11 +15,35 @@ import com.ifarm.porosh.data.repository.local.dbRepos.MovieRepository
 import com.ifarm.porosh.domain.models.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) : ViewModel() {
+
+    private val _movies = MutableLiveData<List<Movies>>()
+    val movies: LiveData<List<Movies>> get() = _movies
+
+    private var currentPage = 1
+    private val pageSize = 10
+    private var allLoadedMovies = mutableListOf<Movies>()
+
+    fun loadNextPage() {
+        viewModelScope.launch {
+            val offset = (currentPage - 1) * pageSize
+            val limit = pageSize
+            val newMovies = movieRepository.getMoviesPaginated(limit, offset)
+            if (newMovies.isNotEmpty()) {
+                allLoadedMovies.addAll(newMovies as Collection<Movies>)
+                _movies.value = allLoadedMovies
+                currentPage++
+            }
+        }
+    }
+    ///////////
+
     /*
     * Movies operations
     * */

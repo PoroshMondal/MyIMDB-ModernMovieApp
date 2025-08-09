@@ -66,7 +66,7 @@ class SplashScreen : AppCompatActivity() {
         val splashThread = object : Thread() {
             override fun run() {
                 try {
-                    sleep(8000) // 3 seconds delay
+                    sleep(8000)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 } finally {
