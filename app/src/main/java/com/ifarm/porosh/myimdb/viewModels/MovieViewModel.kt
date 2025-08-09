@@ -61,7 +61,7 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
     }
 
     fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres> {
-        TODO("Not yet implemented")
+        return movieRepository.getMovieWithGenres(movieId)
     }
 
     fun clearMovies() {

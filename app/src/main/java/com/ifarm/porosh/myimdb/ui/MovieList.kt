@@ -25,7 +25,9 @@ class MovieList : Fragment() {
 
     private lateinit var binding: FragmentMovieListBinding
     private val movieViewModel: MovieViewModel by viewModels()
+
     private lateinit var adapter: MoviesAdapter
+
     private lateinit var mActivity: MainActivity
     private lateinit var navController: NavController
 
@@ -77,8 +79,8 @@ class MovieList : Fragment() {
 
     private fun callBack(movie: Movies, position: Int){
         mActivity.operationsViewModel.setMoviesData(movie)
-        Toast.makeText(requireContext(),"Movie: ${movie.title} postiion: $position", Toast.LENGTH_SHORT).show()
-        navController.navigate(R.id.movieDetails, null, mActivity.clearBackStack())
+        //Toast.makeText(requireContext(),"Movie: ${movie.title} postiion: $position", Toast.LENGTH_SHORT).show()
+        navController.navigate(R.id.movieDetails, null)
     }
 
 }

@@ -40,7 +40,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override fun getMovieWithGenres(movieId: Int): LiveData<MovieWithGenres> {
-        TODO("Not yet implemented")
+       return movieDao.getMovieWithGenres(movieId)
     }
 
     override suspend fun clearMovies() {

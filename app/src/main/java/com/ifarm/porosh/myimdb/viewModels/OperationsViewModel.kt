@@ -6,7 +6,7 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 
 class OperationsViewModel: ViewModel() {
 
-    private val movieItem: MutableLiveData<Movies> = MutableLiveData<Movies>()
+    val movieItem: MutableLiveData<Movies> = MutableLiveData<Movies>()
 
     /*fun getMoviesData(): Movies {
         return movieItem.getValue()
