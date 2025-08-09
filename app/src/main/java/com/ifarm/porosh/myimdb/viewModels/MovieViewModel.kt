@@ -1,5 +1,6 @@
 package com.ifarm.porosh.myimdb.viewModels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,9 @@ import com.ifarm.porosh.data.local.db.entities.WishList
 import com.ifarm.porosh.data.local.db.relations.GenreWithMovies
 import com.ifarm.porosh.data.local.db.relations.MovieWithGenres
 import com.ifarm.porosh.data.repository.local.dbRepos.MovieRepository
+import com.ifarm.porosh.domain.models.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,6 +48,33 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
     /*
     * Genre methods
     * */
+
+    // inserted genre and movieGenreRef ids
+    // as it is depended on genre ids
+    // this method used inserted both
+    suspend fun insertGenreAndMovieGenRef(movies: List<Movie>){
+        val genresMap = mutableMapOf<String, Long>()
+
+        movies.flatMap { it.genres }
+            .distinct()
+            .forEach { genreName ->
+                val id = movieRepository.insertGenre(Genre(name = genreName))
+                genresMap[genreName] = id
+                Log.i("data_module","In viewmodel Genre IDs - response: $id")
+            }
+
+        Log.i("data_module","In viewmodel Genre - response: ${genresMap.size}")
+
+        movies.forEach { movie ->
+            val movieId = movie.id
+            val crossRefs = movie.genres.mapNotNull { genreName ->
+                Log.i("data_module","In viewmodel Genre 2 - response: ${genresMap[genreName]}")
+                genresMap[genreName]?.let { MovieGenreRef(movieId, it) }
+            }
+            insertMovieGenreRefs(crossRefs)
+        }
+    }
+
     fun insertGenre(genre: Genre): LiveData<Long> {
         val result = MutableLiveData<Long>()
         viewModelScope.launch {
@@ -54,8 +84,13 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
         return result
     }
 
-    fun insertGenres(genres: List<Genre>): List<Long> {
-        TODO("Not yet implemented")
+    fun insertGenres(genres: List<Genre>): LiveData<List<Long>> {
+        val result = MutableLiveData<List<Long>>()
+        viewModelScope.launch {
+            val ids = movieRepository.insertGenres(genres)
+            result.postValue(ids)
+        }
+        return result
     }
 
     fun getAllGenres(): LiveData<List<Genre>> {
@@ -105,7 +140,9 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
     }
 
     fun insertMovieGenreRefs(refs: List<MovieGenreRef>) {
-        TODO("Not yet implemented")
+        viewModelScope.launch(Dispatchers.IO) {
+            movieRepository.insertMovieGenreRefs(refs)
+        }
     }
 
 }

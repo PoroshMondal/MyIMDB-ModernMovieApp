@@ -14,7 +14,7 @@ interface GenreDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGenre(genre: Genre): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertGenres(genres: List<Genre>): List<Long>
 
     @Transaction

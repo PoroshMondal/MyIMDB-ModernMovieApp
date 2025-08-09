@@ -1,5 +1,6 @@
 package com.ifarm.porosh.data.repository.local.dbRepos
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.ifarm.porosh.data.local.db.daos.GenreDao
 import com.ifarm.porosh.data.local.db.daos.MovieGenreRefDao
@@ -55,7 +56,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertGenres(genres: List<Genre>): List<Long> {
-        TODO("Not yet implemented")
+        return genreDao.insertGenres(genres)
     }
 
     override fun getAllGenres(): LiveData<List<Genre>> {
@@ -105,7 +106,8 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertMovieGenreRefs(refs: List<MovieGenreRef>) {
-        TODO("Not yet implemented")
+        //Log.i("data_module","Movie Genre Ref repo - : ${refs[0].movieId} ${refs[0].genreId}")
+        movieGenreRefDao.insertMovieGenreRefs(refs)
     }
 
 }
