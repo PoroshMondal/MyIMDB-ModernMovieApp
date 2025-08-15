@@ -14,6 +14,7 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.domain.models.Movie
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
+import com.ifarm.porosh.myimdb.utilities.OtherUtil
 import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
 import com.ifarm.porosh.myimdb.viewModels.MovieViewModel
 import com.ifarm.porosh.myimdb.viewModels.NetworkViewModel
@@ -39,7 +40,11 @@ class SplashScreen : AppCompatActivity() {
 
         dataStoreViewModel.getIsDataStored().observeOnce(this){ isStored ->
             if (!isStored){
-                fetchMovieData()
+                if (OtherUtil.NetworkUtils.isConnected(this)){
+                    fetchMovieData()
+                }else{
+                    // show a dialog
+                }
                 Log.i("splashscreen","Data is not stored fetching data")
             }else{
                 Log.i("splashscreen","data stored moving to next screen")

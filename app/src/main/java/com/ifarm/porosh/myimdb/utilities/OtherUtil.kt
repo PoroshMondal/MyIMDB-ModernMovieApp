@@ -1,12 +1,16 @@
 package com.ifarm.porosh.myimdb.utilities
 
+import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.text.HtmlCompat
 
 
@@ -44,6 +48,34 @@ class OtherUtil {
                     .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethod.hideSoftInputFromWindow(view.windowToken, 0)
             }
+        }
+
+    }
+
+    object NetworkUtils{
+        /*fun isConnected(): Boolean {
+            val connectivityManager =
+                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+
+            var networkInfo: NetworkInfo? = null
+            if (connectivityManager != null) {
+                networkInfo = connectivityManager.getActiveNetworkInfo()
+            }
+
+            return (networkInfo != null && networkInfo.isConnected())
+        }*/
+
+        fun isConnected(activity: Activity): Boolean {
+            val connectivityManager = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            // For Android M (API 23) and above
+            val network = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)
         }
 
     }
