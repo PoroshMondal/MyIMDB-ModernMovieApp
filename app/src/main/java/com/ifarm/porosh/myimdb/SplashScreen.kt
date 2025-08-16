@@ -2,6 +2,8 @@ package com.ifarm.porosh.myimdb
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -13,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.domain.models.Movie
+import com.ifarm.porosh.myimdb.components.NetworkStatus
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
 import com.ifarm.porosh.myimdb.utilities.OtherUtil
 import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
@@ -27,6 +30,8 @@ import kotlinx.coroutines.launch
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
+    private lateinit var networkStatus: NetworkStatus
+
     private val networkViewModel: NetworkViewModel by viewModels()
     private val movieViewModel: MovieViewModel by viewModels()
     private val dataStoreViewModel: DataStoreViewModel by viewModels()
@@ -37,6 +42,13 @@ class SplashScreen : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
+        networkStatus = NetworkStatus(this)
+
+        //register network change broadcast receiver
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        //registerReceiver(networkStatus)
+        //////////////////
 
         dataStoreViewModel.getIsDataStored().observeOnce(this){ isStored ->
             if (!isStored){
@@ -44,6 +56,7 @@ class SplashScreen : AppCompatActivity() {
                     fetchMovieData()
                 }else{
                     // show a dialog
+
                 }
                 Log.i("splashscreen","Data is not stored fetching data")
             }else{
