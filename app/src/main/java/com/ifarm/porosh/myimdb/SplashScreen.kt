@@ -16,7 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.domain.models.Movie
-import com.ifarm.porosh.myimdb.components.NetworkStatusReceiver
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
 import com.ifarm.porosh.myimdb.utilities.OtherUtil
 import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
