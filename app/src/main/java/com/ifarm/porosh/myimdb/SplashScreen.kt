@@ -17,6 +17,7 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.domain.models.Movie
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
+import com.ifarm.porosh.myimdb.ui.dialogs.Dialogs
 import com.ifarm.porosh.myimdb.utilities.OtherUtil
 import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
 import com.ifarm.porosh.myimdb.viewModels.MovieViewModel
@@ -44,51 +45,55 @@ class SplashScreen : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        //register network change broadcast receiver
         networkStatusMonitorViewModel.connectionStatus.observe(this){ isConnected ->
             if (isConnected){
+                isDataStoredAndFetch()
                 Log.i("network_status", "Is connected: $isConnected")
             }else {
+                Toast.makeText(this,resources.getString(R.string.no_internet_msg), Toast.LENGTH_SHORT).show()
                 Log.i("network_status", "Is not connected: $isConnected")
             }
         }
-        //////////////////
 
-        dataStoreViewModel.getIsDataStored().observeOnce(this){ isStored ->
-            if (!isStored){
-                if (OtherUtil.NetworkUtils.isConnected(this)){
-                    fetchMovieData()
-                }else{
-                    // show a dialog
-
-                }
-                Log.i("splashscreen","Data is not stored fetching data")
-            }else{
-                Log.i("splashscreen","data stored moving to next screen")
-                //waitSplash()
-            }
-        }
-
-        // waiting time and functions will modify later
-        //waitSplash()
+        isDataStoredAndFetch()
 
     }
 
     override fun onStart() {
         super.onStart()
-        Toast.makeText(this,"onStart called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,"onStart called", Toast.LENGTH_SHORT).show()
         networkStatusMonitorViewModel.startNetworkMonitoring()
     }
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(this,"onResume called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,"onResume called", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStop() {
         super.onStop()
-        Toast.makeText(this,"onStop called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,"onStop called", Toast.LENGTH_SHORT).show()
         networkStatusMonitorViewModel.stopNetworkMonitoring()
+    }
+
+    var sCount = 0
+    private fun isDataStoredAndFetch(){
+        dataStoreViewModel.getIsDataStored().observeOnce(this){ isStored ->
+            if (!isStored){
+                if (OtherUtil.NetworkUtils.isConnected(this)){
+                    fetchMovieData()
+                }else{
+                    Dialogs(this).showNotifyDialog(resources.getString(R.string.no_internet_msg))
+                }
+                Log.i("splashscreen","Data is not stored fetching data")
+            }else{
+                Log.i("splashscreen","data stored moving to next screen")
+                if (sCount==0) {
+                    waitSplash()
+                    sCount++
+                }
+            }
+        }
     }
 
     fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: (T) -> Unit) {
@@ -105,7 +110,7 @@ class SplashScreen : AppCompatActivity() {
         val splashThread = object : Thread() {
             override fun run() {
                 try {
-                    sleep(8000)
+                    sleep(3000)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 } finally {
@@ -139,11 +144,16 @@ class SplashScreen : AppCompatActivity() {
 
                     //val movieGenres = movieData.genres
                     /*movieViewModel.insertGenres(genreNameList).observe(this){ idList ->
-                    idList.forEach { id ->
-                        //genresMap[genreName] = id
-                        Log.i("data_module","Genre list id - response: $id")
+                        idList.forEach { id ->
+                            //genresMap[genreName] = id
+                            Log.i("data_module","Genre list id - response: $id")
+                        }
+                    }*/
+
+                    if (sCount==0) {
+                        waitSplash()
+                        sCount++
                     }
-                }*/
 
                 }
 
