@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
@@ -15,11 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.domain.models.Movie
-import com.ifarm.porosh.myimdb.components.NetworkStatus
+import com.ifarm.porosh.myimdb.components.NetworkStatusReceiver
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
 import com.ifarm.porosh.myimdb.utilities.OtherUtil
 import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
 import com.ifarm.porosh.myimdb.viewModels.MovieViewModel
+import com.ifarm.porosh.myimdb.viewModels.NetworkStatusViewModel
 import com.ifarm.porosh.myimdb.viewModels.NetworkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +32,8 @@ import kotlinx.coroutines.launch
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
-    private lateinit var networkStatus: NetworkStatus
 
+    private val networkStatusMonitorViewModel: NetworkStatusViewModel by viewModels()
     private val networkViewModel: NetworkViewModel by viewModels()
     private val movieViewModel: MovieViewModel by viewModels()
     private val dataStoreViewModel: DataStoreViewModel by viewModels()
@@ -42,12 +44,15 @@ class SplashScreen : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
-        networkStatus = NetworkStatus(this)
 
         //register network change broadcast receiver
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-        //registerReceiver(networkStatus)
+        networkStatusMonitorViewModel.connectionStatus.observe(this){ isConnected ->
+            if (isConnected){
+                Log.i("network_status", "Is connected: $isConnected")
+            }else {
+                Log.i("network_status", "Is not connected: $isConnected")
+            }
+        }
         //////////////////
 
         dataStoreViewModel.getIsDataStored().observeOnce(this){ isStored ->
@@ -66,8 +71,25 @@ class SplashScreen : AppCompatActivity() {
         }
 
         // waiting time and functions will modify later
-        waitSplash()
+        //waitSplash()
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Toast.makeText(this,"onStart called", Toast.LENGTH_SHORT).show()
+        networkStatusMonitorViewModel.startNetworkMonitoring()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Toast.makeText(this,"onResume called", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Toast.makeText(this,"onStop called", Toast.LENGTH_SHORT).show()
+        networkStatusMonitorViewModel.stopNetworkMonitoring()
     }
 
     fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: (T) -> Unit) {
