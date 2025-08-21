@@ -5,4 +5,6 @@
     <string name="filter">Filter</string>
     <string name="ok">Ok</string>
     <string name="no_internet_msg">No Internet! Check your network settings and try again!</string>
+    <string name="err_msg">No Internet! Check your network settings and try again!</string>
+    <string name="common_err_msg">Something went wrong!</string>
 </resources>

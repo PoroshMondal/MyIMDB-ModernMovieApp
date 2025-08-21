@@ -11,8 +11,10 @@ import com.ifarm.porosh.data.local.db.entities.Movies
 import com.ifarm.porosh.data.local.db.entities.WishList
 import com.ifarm.porosh.data.local.db.relations.GenreWithMovies
 import com.ifarm.porosh.data.local.db.relations.MovieWithGenres
+import com.ifarm.porosh.data.local.dbState.DBState
 import com.ifarm.porosh.data.repository.local.dbRepos.MovieRepository
 import com.ifarm.porosh.domain.models.Movie
+import com.ifarm.porosh.myimdb.utilities.IMDBConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +27,9 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
 
     private val _movies = MutableLiveData<List<Movies>>()
     val movies: LiveData<List<Movies>> get() = _movies
+
+    private val _dbState = MutableStateFlow<DBState>(DBState.Idle)
+    val dbState: StateFlow<DBState> = _dbState
 
     private var currentPage = 1
     private val pageSize = 10
@@ -49,7 +54,20 @@ class MovieViewModel @Inject constructor(val movieRepository: MovieRepository) :
     * */
     fun insertMovies(movies: List<Movies>) {
         viewModelScope.launch {
-            movieRepository.insertMovies(movies)
+            _dbState.value = DBState.Loading
+            try {
+                val idList = movieRepository.insertMovies(movies)
+                Log.i("db_module","insertion value: $idList")
+
+                if (idList.isNotEmpty()){
+                    _dbState.value = DBState.Success
+                }else{
+                    _dbState.value = DBState.Error(IMDBConstants.DB_INSERTION_FAILED_MSG)
+                }
+
+            }catch (e: Exception){
+                _dbState.value = DBState.Error(e.message ?: IMDBConstants.DB_INSERTION_FAILED_MSG)
+            }
         }
     }
 

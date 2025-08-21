@@ -28,8 +28,8 @@ class MovieRepositoryImpl @Inject constructor(
     /*
     * Movies operations
     * */
-    override suspend fun insertMovies(movies: List<Movies>) {
-        movieDao.insertMovies(movies)
+    override suspend fun insertMovies(movies: List<Movies>): List<Long> {
+        return movieDao.insertMovies(movies)
     }
 
     override suspend fun getMoviesPaginated(

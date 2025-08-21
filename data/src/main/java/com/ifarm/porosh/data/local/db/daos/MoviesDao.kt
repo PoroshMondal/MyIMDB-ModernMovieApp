@@ -15,7 +15,7 @@ interface MoviesDao {
     suspend fun insertMovie(movie: Movies)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovies(movies: List<Movies>)
+    suspend fun insertMovies(movies: List<Movies>): List<Long>
 
     @Transaction
     @Query("SELECT * FROM movies ORDER BY year DESC LIMIT :limit OFFSET :offset")

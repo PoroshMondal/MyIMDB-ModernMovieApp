@@ -6,18 +6,22 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.ifarm.porosh.data.local.db.entities.Movies
+import com.ifarm.porosh.data.local.dbState.DBState
 import com.ifarm.porosh.data.remote.apiResponse.ApiResponse
 import com.ifarm.porosh.domain.models.Movie
 import com.ifarm.porosh.myimdb.databinding.ActivitySplashScreenBinding
 import com.ifarm.porosh.myimdb.ui.dialogs.Dialogs
+import com.ifarm.porosh.myimdb.utilities.IMDBConstants
 import com.ifarm.porosh.myimdb.utilities.OtherUtil
 import com.ifarm.porosh.myimdb.viewModels.DataStoreViewModel
 import com.ifarm.porosh.myimdb.viewModels.MovieViewModel
@@ -48,15 +52,16 @@ class SplashScreen : AppCompatActivity() {
         networkStatusMonitorViewModel.connectionStatus.observe(this){ isConnected ->
             if (isConnected){
                 isDataStoredAndFetch()
-                Log.i("network_status", "Is connected: $isConnected")
+                Log.i(IMDBConstants.TAG_SPLASH_SCREEN, "Network Status - Is connected: $isConnected")
             }else {
                 Toast.makeText(this,resources.getString(R.string.no_internet_msg), Toast.LENGTH_SHORT).show()
-                Log.i("network_status", "Is not connected: $isConnected")
+                Log.i(IMDBConstants.TAG_SPLASH_SCREEN, "Network Status - Is not connected: $isConnected")
             }
         }
 
         isDataStoredAndFetch()
 
+        dbState()
     }
 
     override fun onStart() {
@@ -85,9 +90,9 @@ class SplashScreen : AppCompatActivity() {
                 }else{
                     Dialogs(this).showNotifyDialog(resources.getString(R.string.no_internet_msg))
                 }
-                Log.i("splashscreen","Data is not stored fetching data")
+                Log.i(IMDBConstants.TAG_SPLASH_SCREEN,"isDataStoredAndFetch - Data is not stored fetching data")
             }else{
-                Log.i("splashscreen","data stored moving to next screen")
+                Log.i(IMDBConstants.TAG_SPLASH_SCREEN,"isDataStoredAndFetch - data stored moving to next screen")
                 if (sCount==0) {
                     waitSplash()
                     sCount++
@@ -110,7 +115,7 @@ class SplashScreen : AppCompatActivity() {
         val splashThread = object : Thread() {
             override fun run() {
                 try {
-                    sleep(3000)
+                    sleep(2000)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 } finally {
@@ -126,12 +131,13 @@ class SplashScreen : AppCompatActivity() {
         networkViewModel.fetchMovieList().observe(this) { response ->
             when(response) {
                 is ApiResponse.Loading -> {
-                    Log.i("network_module","Loading.....")
-                    //progressDialog.show()
+                    Log.i(IMDBConstants.TAG_NETWORK_MODULE,"SplashScreen - Loading.....")
+                    binding.progressBar.visibility = View.VISIBLE
                 }
 
                 is ApiResponse.Success -> {
-                    //progressDialog.dismiss()
+                    binding.progressBar.visibility = View.GONE
+
                     val movieData = response.data
                     val movies = movieData.movies
 
@@ -150,23 +156,48 @@ class SplashScreen : AppCompatActivity() {
                         }
                     }*/
 
-                    if (sCount==0) {
-                        waitSplash()
-                        sCount++
-                    }
-
                 }
 
                 is ApiResponse.Error -> {
-                    //progressDialog.dismiss()
+                    binding.progressBar.visibility = View.GONE
                     dataStoreViewModel.setDataStoredInfo(false)
-                    Log.i("network_module","Movie List - response: Unsuccessful ${response.message}")
+                    Dialogs(this@SplashScreen).showNotifyDialog(resources.getString(R.string.err_msg))
+                    Log.i(IMDBConstants.TAG_NETWORK_MODULE,"SplashScreen - Movie List - response: Unsuccessful ${response.message}")
                 }
 
             }
 
         }
 
+    }
+
+    private fun dbState(){
+        lifecycleScope.launch {
+            movieViewModel.dbState.collect { state ->
+                when (state) {
+                    is DBState.Loading -> {
+                        Log.i(IMDBConstants.TAG_DATA_MODULE,"SplashScreen - UI loading")
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is DBState.Success -> {
+                        Log.i(IMDBConstants.TAG_DATA_MODULE,"SplashScreen - UI Done")
+                        binding.progressBar.visibility = View.GONE
+                        //Toast.makeText(this@SplashScreen, "Movies saved!", Toast.LENGTH_SHORT).show()
+                        if (sCount==0) {
+                            waitSplash()
+                            sCount++
+                        }
+                    }
+                    is DBState.Error -> {
+                        Log.i(IMDBConstants.TAG_DATA_MODULE,"SplashScreen - UI Error")
+                        binding.progressBar.visibility = View.GONE
+                        Dialogs(this@SplashScreen).showNotifyDialog(resources.getString(R.string.common_err_msg))
+                        //Toast.makeText(this@SplashScreen, state.msg, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> Unit
+                }
+            }
+        }
     }
 
     private fun insertMovies(movies: List<Movie>){

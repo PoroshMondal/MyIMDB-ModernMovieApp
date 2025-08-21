@@ -15,7 +15,7 @@ interface MovieRepository {
     /*
     * Movies methods
     * */
-    suspend fun insertMovies(movies: List<Movies>)
+    suspend fun insertMovies(movies: List<Movies>): List<Long>
 
     suspend fun getMoviesPaginated(limit: Int, offset: Int): List<Movies>
 
